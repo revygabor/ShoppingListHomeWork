@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ShoppingListHomeWork</string>
+    <string name="bought">bought</string>
+    <string name="name">Item name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+</resources>
