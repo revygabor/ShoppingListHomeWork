@@ -47,8 +47,6 @@ public class ShoppingListAdapter
             items.add(item);
         }
         item.category = ShoppingItem.Category.ELECTRICAL;
-        items.add(item);
-        items.add(item);
     }
 
     @NonNull
@@ -78,10 +76,20 @@ public class ShoppingListAdapter
             }
         });
 
-        shoppingListViewHolder.btEdit.setOnClickListener(new View.OnClickListener() {
+        shoppingListViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editItemListener.onEditItem(i);
+            }
+        });
+
+        shoppingListViewHolder.btDelete.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                items.remove(i);
+                notifyItemRemoved(i);
+                notifyItemRangeChanged(i, items.size());
+                dataSetChangedListener.onDataSetChanged();
             }
         });
     }
@@ -116,7 +124,8 @@ public class ShoppingListAdapter
         TextView tvPrice;
         TextView tvCategory;
         CheckBox cbBought;
-        View btEdit;
+        Button btDelete;
+        View itemView;
 
         public ShoppingListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -126,7 +135,8 @@ public class ShoppingListAdapter
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             cbBought = itemView.findViewById(R.id.cbBought);
-            btEdit = itemView.findViewById(R.id.btEdit);
+            btDelete = itemView.findViewById(R.id.btDelete);
+            this.itemView = itemView;
         }
     }
 

@@ -7,4 +7,6 @@
     <string name="category">Category</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="chartDescription">Price of bought goods by category</string>
+    <string name="chartLabelDescription">Types of goods</string>
 </resources>

@@ -68,7 +68,7 @@
 
         <Button
             android:layout_width="@android:dimen/app_icon_size"
-            android:id="@+id/btEdit"
+            android:id="@+id/btDelete"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="..." />

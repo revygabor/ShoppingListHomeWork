@@ -31,6 +31,7 @@ public class PieChartFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_piechart, container, false);
 
         chartGoods = rootView.findViewById(R.id.chartGoods);
+        chartGoods.getDescription().setText(getString(R.string.chartDescription));
 
         drawChart();
 
@@ -48,7 +49,7 @@ public class PieChartFragment extends Fragment {
             }
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Goods");
+        PieDataSet dataSet = new PieDataSet(entries, getString(R.string.chartLabelDescription));
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
 
         PieData data = new PieData(dataSet);
