@@ -9,28 +9,35 @@ import com.example.gbor.shoppinglisthomework.fragments.ShoppingListFragment;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
     private static final int NUM_PAGES = 2;
-    private final ShoppingListAdapter shoppingListAdapter;
+    private final ShoppingListAdapter shoppingListAdapter = new ShoppingListAdapter();
+    ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
+    PieChartFragment pieChartFragment = new PieChartFragment();
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
-        shoppingListAdapter = new ShoppingListAdapter();
+        shoppingListFragment.setShoppingListAdapter(shoppingListAdapter);
+        pieChartFragment.setShoppingListAdapter(shoppingListAdapter);
+
+        ShoppingListFragment.DataSetChangedListener dataSetChangedListener = new ShoppingListFragment.DataSetChangedListener() {
+            @Override
+            public void onDataSetChanged() {
+                pieChartFragment.drawChart();
+            }
+        };
+        shoppingListAdapter.setDataSetChangedListener(dataSetChangedListener);
+        shoppingListFragment.setDataSetChangedListener(dataSetChangedListener);
+
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
-                shoppingListFragment.setShoppingListAdapter(shoppingListAdapter);
                 return shoppingListFragment;
             case 1:
-                PieChartFragment pieChartFragment = new PieChartFragment();
-                pieChartFragment.setShoppingListAdapter(shoppingListAdapter);
                 return pieChartFragment;
             default:
-                ShoppingListFragment shoppingListFragment1 = new ShoppingListFragment();
-                shoppingListFragment1.setShoppingListAdapter(shoppingListAdapter);
-                return shoppingListFragment1;
+                return shoppingListFragment;
         }
     }
 

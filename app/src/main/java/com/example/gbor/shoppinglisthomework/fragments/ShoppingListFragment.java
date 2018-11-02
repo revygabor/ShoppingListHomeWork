@@ -16,8 +16,12 @@ import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
 
 public class ShoppingListFragment extends Fragment {
     private RecyclerView recyclerview;
-
     private ShoppingListAdapter shoppingListAdapter;
+
+    public interface DataSetChangedListener {
+        public void onDataSetChanged();
+    }
+    private DataSetChangedListener dataSetChangedListener;
 
     @Nullable
     @Override
@@ -56,6 +60,7 @@ public class ShoppingListFragment extends Fragment {
         @Override
         public void onShoppingItemDialogResult(ShoppingItem itemToLoad) {
             shoppingListAdapter.addItem(itemToLoad);
+            dataSetChangedListener.onDataSetChanged();
         }
     };
 
@@ -69,11 +74,16 @@ public class ShoppingListFragment extends Fragment {
         @Override
         public void onShoppingItemDialogResult(ShoppingItem itemToEdit) {
             shoppingListAdapter.editItem(i, itemToEdit);
+            dataSetChangedListener.onDataSetChanged();
         }
     };
 
 
     public void setShoppingListAdapter(ShoppingListAdapter shoppingListAdapter) {
         this.shoppingListAdapter = shoppingListAdapter;
+    }
+
+    public void setDataSetChangedListener(DataSetChangedListener dataSetChangedListener) {
+        this.dataSetChangedListener = dataSetChangedListener;
     }
 }

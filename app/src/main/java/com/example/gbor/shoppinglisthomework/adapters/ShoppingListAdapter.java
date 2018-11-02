@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.gbor.shoppinglisthomework.R;
 import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
+import com.example.gbor.shoppinglisthomework.fragments.ShoppingListFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,9 @@ public class ShoppingListAdapter
         extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
 
     private final List<ShoppingItem> items;
+
+    ShoppingListFragment.DataSetChangedListener dataSetChangedListener;
+
 
 
     public interface onEditItemListener {
@@ -70,6 +74,7 @@ public class ShoppingListAdapter
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 item.bought = isChecked;
+                dataSetChangedListener.onDataSetChanged();
             }
         });
 
@@ -125,10 +130,6 @@ public class ShoppingListAdapter
         }
     }
 
-    public void setEditItemListener(onEditItemListener editItemListener) {
-        this.editItemListener = editItemListener;
-    }
-
     public HashMap<ShoppingItem.Category, Integer> getCategoryPrices() {
         HashMap<ShoppingItem.Category, Integer> categoryPrices = new HashMap<>();
         for (ShoppingItem.Category category : ShoppingItem.Category.values()) {
@@ -136,9 +137,19 @@ public class ShoppingListAdapter
         }
 
         for (ShoppingItem item : items) {
-            categoryPrices.put(item.category, categoryPrices.get(item.category) + item.price);
+            if (item.bought) {
+                categoryPrices.put(item.category, categoryPrices.get(item.category) + item.price);
+            }
         }
 
         return categoryPrices;
+    }
+
+    public void setEditItemListener(onEditItemListener editItemListener) {
+        this.editItemListener = editItemListener;
+    }
+
+    public void setDataSetChangedListener(ShoppingListFragment.DataSetChangedListener dataSetChangedListener) {
+        this.dataSetChangedListener = dataSetChangedListener;
     }
 }
