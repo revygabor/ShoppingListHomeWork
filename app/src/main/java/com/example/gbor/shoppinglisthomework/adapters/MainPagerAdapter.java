@@ -10,23 +10,22 @@ import com.example.gbor.shoppinglisthomework.fragments.ShoppingListFragment;
 public class MainPagerAdapter extends FragmentPagerAdapter {
     private static final int NUM_PAGES = 2;
     private final ShoppingListAdapter shoppingListAdapter = new ShoppingListAdapter();
-    ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
     PieChartFragment pieChartFragment = new PieChartFragment();
+    ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
         shoppingListFragment.setShoppingListAdapter(shoppingListAdapter);
         pieChartFragment.setShoppingListAdapter(shoppingListAdapter);
 
-        ShoppingListFragment.DataSetChangedListener dataSetChangedListener = new ShoppingListFragment.DataSetChangedListener() {
+        ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener = new ShoppingListFragment.PieDataSetChangedListener() {
             @Override
             public void onDataSetChanged() {
                 pieChartFragment.drawChart();
             }
         };
-        shoppingListAdapter.setDataSetChangedListener(dataSetChangedListener);
-        shoppingListFragment.setDataSetChangedListener(dataSetChangedListener);
-
+        shoppingListAdapter.setPieDataSetChangedListener(pieDataSetChangedListener);
+        shoppingListFragment.setPieDataSetChangedListener(pieDataSetChangedListener);
     }
 
     @Override

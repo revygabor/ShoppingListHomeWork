@@ -1,14 +1,15 @@
 package com.example.gbor.shoppinglisthomework.adapters;
 
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.gbor.shoppinglisthomework.R;
@@ -19,13 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.example.gbor.shoppinglisthomework.MainActivity.database;
+
 public class ShoppingListAdapter
         extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
 
     private final List<ShoppingItem> items;
-
-    ShoppingListFragment.DataSetChangedListener dataSetChangedListener;
-
+    ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener;
 
 
     public interface onEditItemListener {
@@ -33,20 +34,9 @@ public class ShoppingListAdapter
     }
     private  onEditItemListener editItemListener;
 
-
     public ShoppingListAdapter() {
         items = new ArrayList<>();
-        ShoppingItem item = new ShoppingItem();
-        for(int i = 0; i<5; i++) {
-            item = new ShoppingItem();
-            item.bought = false;
-            item.name = "itemm" + Integer.toString(i);
-            item.description = "descr";
-            item.price = 1000;
-            item.category = ShoppingItem.Category.BOOK;
-            items.add(item);
-        }
-        item.category = ShoppingItem.Category.ELECTRICAL;
+        loadItemsInBackground();
     }
 
     @NonNull
@@ -68,11 +58,11 @@ public class ShoppingListAdapter
         shoppingListViewHolder.tvCategory.setText(item.category.toString().toLowerCase());
         shoppingListViewHolder.cbBought.setChecked(item.bought);
 
-        shoppingListViewHolder.cbBought.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+        shoppingListViewHolder.cbBought.setOnClickListener(new CheckBox.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                item.bought = isChecked;
-                dataSetChangedListener.onDataSetChanged();
+            public void onClick(View v) {
+                item.bought = shoppingListViewHolder.cbBought.isChecked();
+                ondatabaseItemChanged(item, shoppingListViewHolder.getAdapterPosition());
             }
         });
 
@@ -87,9 +77,7 @@ public class ShoppingListAdapter
             @Override
             public void onClick(View v) {
                 int position = shoppingListViewHolder.getAdapterPosition();
-                items.remove(position);
-                notifyItemRemoved(position);
-                dataSetChangedListener.onDataSetChanged();
+                removeItem(position);
             }
         });
     }
@@ -101,7 +89,7 @@ public class ShoppingListAdapter
 
     public void addItem(ShoppingItem item) {
         items.add(item);
-        notifyItemInserted(items.size()-1);
+        onItemCreated(item);
     }
 
     public void editItem(int i, ShoppingItem editedItem) {
@@ -111,7 +99,21 @@ public class ShoppingListAdapter
         shoppingItemToEdit.category = editedItem.category;
         shoppingItemToEdit.price = editedItem.price;
         shoppingItemToEdit.bought = editedItem.bought;
-        notifyItemChanged(i);
+
+        ondatabaseItemChanged(shoppingItemToEdit, i);
+    }
+
+    private void removeItem(int position) {
+        items.remove(position);
+        onItemRemoved(position);
+    }
+
+    public void loadItems(List<ShoppingItem> shoppingItems) {
+        items.clear();
+        items.addAll(shoppingItems);
+        notifyDataSetChanged();
+
+        pieDataSetChangedListener.onDataSetChanged();
     }
 
     public ShoppingItem getItem(int i) {
@@ -155,11 +157,80 @@ public class ShoppingListAdapter
         return categoryPrices;
     }
 
+    private void loadItemsInBackground() {
+        new AsyncTask<Void, Void, List<ShoppingItem>>() {
+
+            @Override
+            protected List<ShoppingItem> doInBackground(Void... voids) {
+                return database.shoppingItemDao().getAll();
+            }
+
+            @Override
+            protected void onPostExecute(List<ShoppingItem> shoppingItems) {
+                Log.d("Database", "ShoppingItems are successfully loaded");
+                loadItems(shoppingItems);
+            }
+        }.execute();
+    }
+
+    public void ondatabaseItemChanged(final ShoppingItem item, final int position) {
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                database.shoppingItemDao().update(item);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccessful) {
+                Log.d("Database", "ShoppingItem update was successful");
+                notifyItemChanged(position);
+                pieDataSetChangedListener.onDataSetChanged();
+            }
+        }.execute();
+    }
+
+    public void onItemCreated(final ShoppingItem newItem) {
+        new AsyncTask<Void, Void, ShoppingItem>() {
+
+            @Override
+            protected ShoppingItem doInBackground(Void... voids) {
+                newItem.id = database.shoppingItemDao().insert(newItem);
+                return newItem;
+            }
+
+            @Override
+            protected void onPostExecute(ShoppingItem shoppingItem) {
+                Log.d("Database", "New ShoppingItem saved successful");
+                notifyItemInserted(items.size()-1);
+                pieDataSetChangedListener.onDataSetChanged();
+            }
+        }.execute();
+    }
+
+    public void onItemRemoved(final int position) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                database.shoppingItemDao().deleteItem(items.get(position));
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccessful) {
+                Log.d("Database", "ShoppingItem delete was successful");
+                notifyItemRemoved(position);
+                pieDataSetChangedListener.onDataSetChanged();
+            }
+        }.execute();
+    }
+
     public void setEditItemListener(onEditItemListener editItemListener) {
         this.editItemListener = editItemListener;
     }
 
-    public void setDataSetChangedListener(ShoppingListFragment.DataSetChangedListener dataSetChangedListener) {
-        this.dataSetChangedListener = dataSetChangedListener;
+    public void setPieDataSetChangedListener(ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener) {
+        this.pieDataSetChangedListener = pieDataSetChangedListener;
     }
 }

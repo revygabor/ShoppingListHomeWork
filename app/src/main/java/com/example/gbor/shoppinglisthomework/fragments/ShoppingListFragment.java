@@ -16,12 +16,12 @@ import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
 
 public class ShoppingListFragment extends Fragment {
     private RecyclerView recyclerview;
-    private ShoppingListAdapter shoppingListAdapter;
+    private ShoppingListAdapter shoppingListAdapter = null;
 
-    public interface DataSetChangedListener {
+    public interface PieDataSetChangedListener {
         public void onDataSetChanged();
     }
-    private DataSetChangedListener dataSetChangedListener;
+    private PieDataSetChangedListener pieDataSetChangedListener = null;
 
     @Nullable
     @Override
@@ -58,9 +58,8 @@ public class ShoppingListFragment extends Fragment {
 
     class newShoppingItemDialogResultListener implements NewItemDialogFragment.ShoppingItemListener {
         @Override
-        public void onShoppingItemDialogResult(ShoppingItem itemToLoad) {
-            shoppingListAdapter.addItem(itemToLoad);
-            dataSetChangedListener.onDataSetChanged();
+        public void onShoppingItemDialogResult(ShoppingItem newItem) {
+            shoppingListAdapter.addItem(newItem);
         }
     };
 
@@ -72,18 +71,17 @@ public class ShoppingListFragment extends Fragment {
         }
 
         @Override
-        public void onShoppingItemDialogResult(ShoppingItem itemToEdit) {
-            shoppingListAdapter.editItem(i, itemToEdit);
-            dataSetChangedListener.onDataSetChanged();
+        public void onShoppingItemDialogResult(ShoppingItem tempItem) {
+            shoppingListAdapter.editItem(i, tempItem);
         }
     };
-
 
     public void setShoppingListAdapter(ShoppingListAdapter shoppingListAdapter) {
         this.shoppingListAdapter = shoppingListAdapter;
     }
 
-    public void setDataSetChangedListener(DataSetChangedListener dataSetChangedListener) {
-        this.dataSetChangedListener = dataSetChangedListener;
+    public void setPieDataSetChangedListener(PieDataSetChangedListener pieDataSetChangedListener) {
+        this.pieDataSetChangedListener = pieDataSetChangedListener;
     }
+
 }

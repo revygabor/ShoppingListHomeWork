@@ -1,5 +1,6 @@
 package com.example.gbor.shoppinglisthomework.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,12 +34,22 @@ public class PieChartFragment extends Fragment {
         chartGoods = rootView.findViewById(R.id.chartGoods);
         chartGoods.getDescription().setText(getString(R.string.chartDescription));
 
-        drawChart();
+//        drawChart();
 
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        drawChart();
+    }
+
     public void drawChart() {
+        if(getContext() == null)
+            return;
+
+
         HashMap<ShoppingItem.Category, Integer> categoryPrices = shoppingListAdapter.getCategoryPrices();
         List<PieEntry> entries = new ArrayList<>();
 

@@ -76,15 +76,15 @@ public class NewItemDialogFragment extends DialogFragment {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShoppingItem item = new ShoppingItem();
-                item.name = etItemName.getText().toString();
-                item.description = etItemDescription.getText().toString();
-                item.category = (ShoppingItem.Category) spinnerCategory.getSelectedItem();
-                item.price = etPrice.getText().toString().equals("") ? 0 : Integer.parseInt(etPrice.getText().toString());
-                item.bought = cbAlreadyBought.isChecked();
+                ShoppingItem tempItem = new ShoppingItem();
+                tempItem.name = etItemName.getText().toString();
+                tempItem.description = etItemDescription.getText().toString();
+                tempItem.category = (ShoppingItem.Category) spinnerCategory.getSelectedItem();
+                tempItem.price = etPrice.getText().toString().equals("") ? 0 : Integer.parseInt(etPrice.getText().toString());
+                tempItem.bought = cbAlreadyBought.isChecked();
 
                 if (listener != null) {
-                    listener.onShoppingItemDialogResult(item);
+                    listener.onShoppingItemDialogResult(tempItem);
                 }
 
                 dismiss();
