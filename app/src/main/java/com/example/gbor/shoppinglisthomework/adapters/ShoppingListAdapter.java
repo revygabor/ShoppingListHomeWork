@@ -59,7 +59,7 @@ public class ShoppingListAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShoppingListViewHolder shoppingListViewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ShoppingListViewHolder shoppingListViewHolder, final int i) {
         final ShoppingItem item = items.get(i);
 
         shoppingListViewHolder.tvShoppingItemName.setText(item.name);
@@ -79,16 +79,16 @@ public class ShoppingListAdapter
         shoppingListViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editItemListener.onEditItem(i);
+                editItemListener.onEditItem(shoppingListViewHolder.getAdapterPosition());
             }
         });
 
         shoppingListViewHolder.btDelete.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                items.remove(i);
-                notifyItemRemoved(i);
-                notifyItemRangeChanged(i, items.size());
+                int position = shoppingListViewHolder.getAdapterPosition();
+                items.remove(position);
+                notifyItemRemoved(position);
                 dataSetChangedListener.onDataSetChanged();
             }
         });
