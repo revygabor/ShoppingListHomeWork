@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.gbor.shoppinglisthomework.R;
 import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
 import com.example.gbor.shoppinglisthomework.fragments.ShoppingListFragment;
+import com.example.gbor.shoppinglisthomework.touch.TouchHelperNotifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +24,15 @@ import java.util.List;
 import static com.example.gbor.shoppinglisthomework.MainActivity.database;
 
 public class ShoppingListAdapter
-        extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
+        extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> implements TouchHelperNotifier {
 
     private final List<ShoppingItem> items;
     ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener;
+
+    @Override
+    public void onItemDismissed(int position) {
+        removeItem(position);
+    }
 
 
     public interface onEditItemListener {
@@ -72,14 +78,6 @@ public class ShoppingListAdapter
                 editItemListener.onEditItem(shoppingListViewHolder.getAdapterPosition());
             }
         });
-
-        shoppingListViewHolder.btDelete.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = shoppingListViewHolder.getAdapterPosition();
-                removeItem(position);
-            }
-        });
     }
 
     @Override
@@ -104,7 +102,6 @@ public class ShoppingListAdapter
     }
 
     private void removeItem(int position) {
-        items.remove(position);
         onItemRemoved(position);
     }
 
@@ -220,6 +217,7 @@ public class ShoppingListAdapter
             @Override
             protected void onPostExecute(Boolean isSuccessful) {
                 Log.d("Database", "ShoppingItem delete was successful");
+                items.remove(position);
                 notifyItemRemoved(position);
                 pieDataSetChangedListener.onDataSetChanged();
             }

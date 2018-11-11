@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.gbor.shoppinglisthomework.R;
 import com.example.gbor.shoppinglisthomework.adapters.ShoppingListAdapter;
 import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
+import com.example.gbor.shoppinglisthomework.touch.ItemTouchHelperCallback;
 
 public class ShoppingListFragment extends Fragment {
     private RecyclerView recyclerview;
@@ -45,6 +47,10 @@ public class ShoppingListFragment extends Fragment {
                 createItemDialog(null, new newShoppingItemDialogResultListener());
             }
         });
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(shoppingListAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerview);
 
         return rootView;
     }
