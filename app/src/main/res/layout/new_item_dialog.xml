@@ -6,6 +6,7 @@
     android:padding="30dp">
 
     <TextView
+        android:labelFor="@+id/etItemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/name" />
@@ -16,9 +17,10 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:labelFor="@+id/etItemDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dip"
+        android:layout_marginTop="16dp"
         android:text="@string/description" />
 
     <EditText
@@ -27,9 +29,10 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:labelFor="@+id/spinnerCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dip"
+        android:layout_marginTop="16dp"
         android:text="@string/category" />
 
     <Spinner
@@ -38,9 +41,10 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:labelFor="@+id/etPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dip"
+        android:layout_marginTop="16dp"
         android:text="@string/price" />
 
     <EditText

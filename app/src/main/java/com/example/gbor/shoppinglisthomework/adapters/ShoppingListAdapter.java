@@ -123,7 +123,6 @@ public class ShoppingListAdapter
         TextView tvPrice;
         TextView tvCategory;
         CheckBox cbBought;
-        Button btDelete;
         View itemView;
 
         public ShoppingListViewHolder(@NonNull View itemView) {
@@ -134,7 +133,6 @@ public class ShoppingListAdapter
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             cbBought = itemView.findViewById(R.id.cbBought);
-            btDelete = itemView.findViewById(R.id.btDelete);
             this.itemView = itemView;
         }
     }
