@@ -19,8 +19,6 @@ import com.example.gbor.shoppinglisthomework.data.ShoppingItem;
 public class NewItemDialogFragment extends DialogFragment {
 
     public static final String TAG = "NEW_ITEM_DIALOG_FRAGMENT";
-    private Button btnCancel;
-    private Button btnOk;
     private EditText etPrice;
     private EditText etItemName;
     private EditText etItemDescription;
@@ -45,8 +43,8 @@ public class NewItemDialogFragment extends DialogFragment {
 
         View rootView = inflater.inflate(R.layout.new_item_dialog, container, false);
 
-        btnCancel = rootView.findViewById(R.id.btnCancel);
-        btnOk = rootView.findViewById(R.id.btnOk);
+        Button btnCancel = rootView.findViewById(R.id.btnCancel);
+        Button btnOk = rootView.findViewById(R.id.btnOk);
 
         etItemName = rootView.findViewById(R.id.etItemName);
         etItemDescription = rootView.findViewById(R.id.etItemDescription);

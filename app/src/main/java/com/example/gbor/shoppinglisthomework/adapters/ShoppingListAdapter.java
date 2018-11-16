@@ -27,7 +27,8 @@ public class ShoppingListAdapter
         extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> implements TouchHelperNotifier {
 
     private final List<ShoppingItem> items;
-    ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener;
+    private ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener = null;
+    private boolean dataSetLoaded = false;
 
     @Override
     public void onItemDismissed(int position) {
@@ -40,7 +41,7 @@ public class ShoppingListAdapter
     }
     private  onEditItemListener editItemListener;
 
-    public ShoppingListAdapter() {
+    ShoppingListAdapter() {
         items = new ArrayList<>();
         loadItemsInBackground();
     }
@@ -105,12 +106,15 @@ public class ShoppingListAdapter
         onItemRemoved(position);
     }
 
-    public void loadItems(List<ShoppingItem> shoppingItems) {
+    private void loadItems(List<ShoppingItem> shoppingItems) {
         items.clear();
         items.addAll(shoppingItems);
         notifyDataSetChanged();
+        dataSetLoaded = true;
 
-        pieDataSetChangedListener.onDataSetChanged();
+        if (pieDataSetChangedListener != null) {
+            pieDataSetChangedListener.onDataSetChanged();
+        }
     }
 
     public ShoppingItem getItem(int i) {
@@ -125,7 +129,7 @@ public class ShoppingListAdapter
         CheckBox cbBought;
         View itemView;
 
-        public ShoppingListViewHolder(@NonNull View itemView) {
+        ShoppingListViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvShoppingItemName = itemView.findViewById(R.id.tvShoppingItemName);
@@ -228,5 +232,8 @@ public class ShoppingListAdapter
 
     public void setPieDataSetChangedListener(ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener) {
         this.pieDataSetChangedListener = pieDataSetChangedListener;
+        if(dataSetLoaded) {
+            pieDataSetChangedListener.onDataSetChanged();
+        }
     }
 }

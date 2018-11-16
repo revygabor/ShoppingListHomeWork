@@ -7,25 +7,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.gbor.shoppinglisthomework.fragments.PieChartFragment;
 import com.example.gbor.shoppinglisthomework.fragments.ShoppingListFragment;
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MainPagerAdapter extends FragmentPagerAdapter implements PieChartFragment.ContextCratedListener{
     private static final int NUM_PAGES = 2;
     private final ShoppingListAdapter shoppingListAdapter = new ShoppingListAdapter();
-    PieChartFragment pieChartFragment = new PieChartFragment();
-    ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
+    private PieChartFragment pieChartFragment = new PieChartFragment();
+    private ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
+    private final ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener;
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
         shoppingListFragment.setShoppingListAdapter(shoppingListAdapter);
         pieChartFragment.setShoppingListAdapter(shoppingListAdapter);
+        pieChartFragment.setContextCreatedListener(this);
 
-        ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener = new ShoppingListFragment.PieDataSetChangedListener() {
+        pieDataSetChangedListener = new ShoppingListFragment.PieDataSetChangedListener() {
             @Override
             public void onDataSetChanged() {
                 pieChartFragment.drawChart();
             }
         };
-        shoppingListAdapter.setPieDataSetChangedListener(pieDataSetChangedListener);
-        shoppingListFragment.setPieDataSetChangedListener(pieDataSetChangedListener);
     }
 
     @Override
@@ -43,5 +43,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return NUM_PAGES;
+    }
+
+    @Override
+    public void onContextCreated() {
+        shoppingListAdapter.setPieDataSetChangedListener(pieDataSetChangedListener);
+        shoppingListFragment.setPieDataSetChangedListener(pieDataSetChangedListener);
     }
 }

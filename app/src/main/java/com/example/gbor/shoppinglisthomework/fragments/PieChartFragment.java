@@ -1,6 +1,5 @@
 package com.example.gbor.shoppinglisthomework.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,34 +22,35 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PieChartFragment extends Fragment {
-    private PieChart chartGoods;
-    private ShoppingListAdapter shoppingListAdapter;
+    private PieChart chartGoods = null;
+    private ShoppingListAdapter shoppingListAdapter = null;
+    private ContextCratedListener contextCratedListener = null;
 
     @Nullable
     @Override
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_piechart, container, false);
 
         chartGoods = rootView.findViewById(R.id.chartGoods);
         chartGoods.getDescription().setText(getString(R.string.chartDescription));
 
-//        drawChart();
-
         return rootView;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        drawChart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        contextCratedListener.onContextCreated();
     }
 
     public void drawChart() {
-        if(getContext() == null)
-            return;
+        HashMap<ShoppingItem.Category, Integer> categoryPrices = new HashMap<>();
 
+        if (shoppingListAdapter != null) {
+            categoryPrices = shoppingListAdapter.getCategoryPrices();
+        }
 
-        HashMap<ShoppingItem.Category, Integer> categoryPrices = shoppingListAdapter.getCategoryPrices();
         List<PieEntry> entries = new ArrayList<>();
 
         for (ShoppingItem.Category cat : categoryPrices.keySet()) {
@@ -70,5 +70,13 @@ public class PieChartFragment extends Fragment {
 
     public void setShoppingListAdapter(ShoppingListAdapter shoppingListAdapter) {
         this.shoppingListAdapter = shoppingListAdapter;
+    }
+
+    public interface ContextCratedListener {
+        void onContextCreated();
+    }
+
+    public void setContextCreatedListener(ContextCratedListener contextCreatedListener) {
+        this.contextCratedListener = contextCreatedListener;
     }
 }

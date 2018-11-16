@@ -47,7 +47,7 @@ public class ShoppingItem {
         public static int toInt(Category category) {
             return category.ordinal();
         }
-    };
+    }
 
     @ColumnInfo(name = "category")
     public Category category;

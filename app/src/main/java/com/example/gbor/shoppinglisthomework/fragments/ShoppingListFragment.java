@@ -67,7 +67,7 @@ public class ShoppingListFragment extends Fragment {
         public void onShoppingItemDialogResult(ShoppingItem newItem) {
             shoppingListAdapter.addItem(newItem);
         }
-    };
+    }
 
     class editShoppingItemDialogResultListener implements NewItemDialogFragment.ShoppingItemListener {
         private final int i;
