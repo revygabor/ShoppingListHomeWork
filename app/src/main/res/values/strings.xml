@@ -13,4 +13,6 @@
     <string name="item_name">Name</string>
     <string name="exact_match">Exact Match</string>
     <string name="filter_by_category">Filter By Category</string>
+    <string name="max_price">max price: </string>
+    <string name="min_price">min price: </string>
 </resources>

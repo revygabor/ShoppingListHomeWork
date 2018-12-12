@@ -84,8 +84,11 @@ public class ShoppingListAdapter
         if (appliedFilter != null) {
             boolean shouldShow = appliedFilter.shouldShow(item);
             shoppingListViewHolder.itemView.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
-            if (!shouldShow)
+            if (!shouldShow) {
                 shoppingListViewHolder.itemView.getLayoutParams().height = 0;
+            } else {
+                shoppingListViewHolder.itemView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
         }
     }
 
@@ -210,8 +213,8 @@ public class ShoppingListAdapter
             @Override
             protected void onPostExecute(ShoppingItem shoppingItem) {
                 Log.d("Database", "New ShoppingItem saved successful");
-                notifyItemInserted(items.size() - 1);
                 pieDataSetChangedListener.onDataSetChanged();
+                notifyDataSetChanged();
             }
         }.execute();
     }
