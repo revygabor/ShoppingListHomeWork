@@ -1,13 +1,18 @@
 package com.example.gbor.shoppinglisthomework.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,6 +60,28 @@ public class ShoppingListFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter) {
+            FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
+            filterDialogFragment.show(getActivity().getSupportFragmentManager(), FilterDialogFragment.TAG);
+            filterDialogFragment.setTargetAdapter(shoppingListAdapter);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     private void createItemDialog(ShoppingItem item, NewItemDialogFragment.ShoppingItemListener shoppingItemListener) {
         NewItemDialogFragment fr = new NewItemDialogFragment();
         fr.setShoppingItem(item);
@@ -80,7 +107,7 @@ public class ShoppingListFragment extends Fragment {
         public void onShoppingItemDialogResult(ShoppingItem tempItem) {
             shoppingListAdapter.editItem(i, tempItem);
         }
-    };
+    }
 
     public void setShoppingListAdapter(ShoppingListAdapter shoppingListAdapter) {
         this.shoppingListAdapter = shoppingListAdapter;

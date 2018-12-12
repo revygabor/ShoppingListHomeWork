@@ -39,7 +39,8 @@ public class ShoppingListAdapter
     public interface onEditItemListener {
         void onEditItem(int i);
     }
-    private  onEditItemListener editItemListener;
+
+    private onEditItemListener editItemListener;
 
     ShoppingListAdapter() {
         items = new ArrayList<>();
@@ -79,6 +80,13 @@ public class ShoppingListAdapter
                 editItemListener.onEditItem(shoppingListViewHolder.getAdapterPosition());
             }
         });
+
+        if (appliedFilter != null) {
+            boolean shouldShow = appliedFilter.shouldShow(item);
+            shoppingListViewHolder.itemView.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+            if (!shouldShow)
+                shoppingListViewHolder.itemView.getLayoutParams().height = 0;
+        }
     }
 
     @Override
@@ -202,7 +210,7 @@ public class ShoppingListAdapter
             @Override
             protected void onPostExecute(ShoppingItem shoppingItem) {
                 Log.d("Database", "New ShoppingItem saved successful");
-                notifyItemInserted(items.size()-1);
+                notifyItemInserted(items.size() - 1);
                 pieDataSetChangedListener.onDataSetChanged();
             }
         }.execute();
@@ -232,8 +240,38 @@ public class ShoppingListAdapter
 
     public void setPieDataSetChangedListener(ShoppingListFragment.PieDataSetChangedListener pieDataSetChangedListener) {
         this.pieDataSetChangedListener = pieDataSetChangedListener;
-        if(dataSetLoaded) {
+        if (dataSetLoaded) {
             pieDataSetChangedListener.onDataSetChanged();
         }
+    }
+
+    public static class ShoppingListFilter {
+        String _name;
+        boolean nameFull;
+        int _minPrice;
+        double _maxPrice;
+        ShoppingItem.Category _category;
+
+        public ShoppingListFilter(String _name, boolean nameFull, int _minPrice, double _maxPrice, ShoppingItem.Category _category) {
+            this._name = _name;
+            this.nameFull = nameFull;
+            this._minPrice = _minPrice;
+            this._maxPrice = _maxPrice;
+            this._category = _category;
+        }
+
+        boolean shouldShow(ShoppingItem item) {
+            return
+                    (_name == null || (nameFull ? _name.equals(item.name) : item.name.contains(_name)))
+                            && item.price >= _minPrice && item.price <= _maxPrice
+                            && (_category == null || _category == item.category);
+        }
+    }
+
+    private ShoppingListFilter appliedFilter = null;
+
+    public void applyFilter(ShoppingListFilter filter) {
+        appliedFilter = filter;
+        notifyDataSetChanged();
     }
 }

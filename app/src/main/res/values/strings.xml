@@ -9,4 +9,8 @@
     <string name="ok">OK</string>
     <string name="chartDescription">Price of bought goods by category</string>
     <string name="chartLabelDescription">Types of goods</string>
+    <string name="filter">Filter</string>
+    <string name="item_name">Name</string>
+    <string name="exact_match">Exact Match</string>
+    <string name="filter_by_category">Filter By Category</string>
 </resources>
